@@ -41,21 +41,21 @@ public class ParagraphParser extends AbstractBlockParser {
 
     @Override
     public void closeBlock() {
-        if (linkReferenceDefinitionParser.getParagraphContent().length() == 0) {
+        if (linkReferenceDefinitionParser.getParagraphLines().isEmpty()) {
             block.unlink();
         }
     }
 
     @Override
     public void parseInlines(InlineParser inlineParser) {
-        CharSequence content = linkReferenceDefinitionParser.getParagraphContent();
-        if (content.length() > 0) {
-            inlineParser.parse(content.toString(), block);
+        List<CharSequence> lines = linkReferenceDefinitionParser.getParagraphLines();
+        if (!lines.isEmpty()) {
+            inlineParser.parse(lines, block);
         }
     }
 
-    public CharSequence getContentString() {
-        return linkReferenceDefinitionParser.getParagraphContent();
+    public List<CharSequence> getParagraphLines() {
+        return linkReferenceDefinitionParser.getParagraphLines();
     }
 
     public List<LinkReferenceDefinition> getDefinitions() {

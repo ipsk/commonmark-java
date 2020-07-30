@@ -7,6 +7,7 @@ import org.commonmark.parser.InlineParser;
 import org.commonmark.parser.block.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TableBlockParser extends AbstractBlockParser {
@@ -95,7 +96,7 @@ public class TableBlockParser extends AbstractBlockParser {
             tableCell.setAlignment(columns.get(column));
         }
 
-        inlineParser.parse(cell.trim(), tableCell);
+        inlineParser.parse(Collections.<CharSequence>singletonList(cell.trim()), tableCell);
 
         return tableCell;
     }
@@ -224,12 +225,12 @@ public class TableBlockParser extends AbstractBlockParser {
         @Override
         public BlockStart tryStart(ParserState state, MatchedBlockParser matchedBlockParser) {
             CharSequence line = state.getLine();
-            CharSequence paragraph = matchedBlockParser.getParagraphContent();
-            if (paragraph != null && paragraph.toString().contains("|") && !paragraph.toString().contains("\n")) {
+            List<CharSequence> paragraphLines = matchedBlockParser.getParagraphLines();
+            if (paragraphLines.size() == 1 && paragraphLines.get(0).toString().contains("|")) {
                 CharSequence separatorLine = line.subSequence(state.getIndex(), line.length());
                 List<TableCell.Alignment> columns = parseSeparator(separatorLine);
                 if (columns != null && !columns.isEmpty()) {
-                    List<String> headerCells = split(paragraph);
+                    List<String> headerCells = split(paragraphLines.get(0));
                     if (columns.size() >= headerCells.size()) {
                         return BlockStart.of(new TableBlockParser(columns, headerCells))
                                 .atIndex(state.getIndex())
