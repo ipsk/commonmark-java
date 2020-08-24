@@ -1,3 +1,8 @@
+Fork changes
+============
+This is a small personal fork that removes HTML stripping changes the syntax to allow `t__est__` to be a valid syntax (similar to discord).
+This fork is used in my Markdown Minecraft project https://github.com/ipsk/MF-MSG.
+
 commonmark-java
 ===============
 
