@@ -198,27 +198,7 @@ public class InlineParserImpl implements InlineParser {
             case '\\':
                 node = parseBackslash();
                 break;
-            case '`':
-                node = parseBackticks();
-                break;
-            case '[':
-                node = parseOpenBracket();
-                break;
-            case '!':
-                node = parseBang();
-                break;
-            case ']':
-                node = parseCloseBracket();
-                break;
-            case '<':
-                node = parseAutolink();
-                if (node == null) {
-                    node = parseHtmlInline();
-                }
-                break;
-            case '&':
-                node = parseEntity();
-                break;
+
             default:
                 boolean isDelimiter = delimiterCharacters.get(c);
                 if (isDelimiter) {
@@ -708,13 +688,9 @@ public class InlineParserImpl implements InlineParser {
                 (!beforeIsPunctuation || afterIsWhitespace || afterIsPunctuation);
         boolean canOpen;
         boolean canClose;
-        if (delimiterChar == '_') {
-            canOpen = leftFlanking && (!rightFlanking || beforeIsPunctuation);
-            canClose = rightFlanking && (!leftFlanking || afterIsPunctuation);
-        } else {
-            canOpen = leftFlanking && delimiterChar == delimiterProcessor.getOpeningCharacter();
-            canClose = rightFlanking && delimiterChar == delimiterProcessor.getClosingCharacter();
-        }
+
+        canOpen = leftFlanking && delimiterChar == delimiterProcessor.getOpeningCharacter();
+        canClose = rightFlanking && delimiterChar == delimiterProcessor.getClosingCharacter();
 
         index = startIndex;
         return new DelimiterData(delimiterCount, canOpen, canClose);
